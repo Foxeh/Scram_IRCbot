@@ -1,0 +1,6 @@
+setup.py
+ScramC2Bot/ircbot.py
+ScramC2Bot.egg-info/PKG-INFO
+ScramC2Bot.egg-info/SOURCES.txt
+ScramC2Bot.egg-info/dependency_links.txt
+ScramC2Bot.egg-info/top_level.txt
