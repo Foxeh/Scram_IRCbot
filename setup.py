@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name = 'ScramC2Bot',
-      version = '1.0',
+      version = '0.1.1',
       description = 'Irc Command and Control Bot',
       author = 'Tyler Mikesell, Joshua Shank',
       author_email = 'tyler.mikesell@altamiracorp.com, joshua.shank@altamiracorp.com',

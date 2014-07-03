@@ -1,4 +1,5 @@
 setup.py
+ScramC2Bot/__init__.py
 ScramC2Bot/ircbot.py
 ScramC2Bot.egg-info/PKG-INFO
 ScramC2Bot.egg-info/SOURCES.txt
