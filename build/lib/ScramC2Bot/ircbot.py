@@ -62,10 +62,11 @@ class ScramBot(irc.IRCClient):
         """
         Sets our nick
         """
-        config = ConfigParser.ConfigParser()
-        #TODO: config??
-        config.read("settings.ini")
-        nickname = config.get('irc', 'nickname')
+        path = os.path.abspath('master_config.ini')
+        settings = ConfigParser.ConfigParser()
+        settings.read(path)
+        
+        nickname = settings.get('ScramBot', 'nickname')
         irc.IRCClient.setNick(self, nickname)
 
     def connectionMade(self):
@@ -158,16 +159,24 @@ class ScramBotFactory(protocol.ClientFactory):
 
 class BotC2:    
     def __init__(self, protocol, reactor):
-        #TODO: read channel in from global config
-        self.factory = ScramBotFactory(protocol, "scrambot", reactor)
-        #TODO: read irc server ip from global config
-        reactor.connectTCP("192.168.100.126", 6667, self.factory) 
+    
+        self.path = os.path.abspath('master_config.ini')
+        self.settings = ConfigParser.ConfigParser()
+        self.settings.read(self.path)
+        
+        server = self.settings.get('BotC2', 'server')
+        channel = self.settings.get('BotC2', 'channel')
+        port = self.settings.get('BotC2', 'port')
+        
+        self.factory = ScramBotFactory(protocol, channel, reactor)
+        reactor.connectTCP(server, port, self.factory) 
         
 if __name__ == '__main__':       
     p = ScramBotProtocol()    
     c = BotC2(p,reactor)
     reactor.run()
     
+
     
     
     
