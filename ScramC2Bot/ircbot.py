@@ -166,7 +166,7 @@ class BotC2:
         
         server = self.settings.get('BotC2', 'server')
         channel = self.settings.get('BotC2', 'channel')
-        port = self.settings.get('BotC2', 'port')
+        port = int(self.settings.get('BotC2', 'port'))
         
         self.factory = ScramBotFactory(protocol, channel, reactor)
         reactor.connectTCP(server, port, self.factory) 
@@ -175,8 +175,3 @@ if __name__ == '__main__':
     p = ScramBotProtocol()    
     c = BotC2(p,reactor)
     reactor.run()
-    
-
-    
-    
-    
