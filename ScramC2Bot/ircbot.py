@@ -1,5 +1,6 @@
 from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
+from twisted.internet import ssl
 from twisted.python import log
 
 
@@ -22,19 +23,22 @@ class ScramBotProtocol:
  # Leave this main handler alone!! This defines the protocol!!!
  #       
     def handler(self, bot, msg, channel, user):
-        msgParts = msg.split(':')        
+        if ':' in msg:
+            msgParts = msg.split(':')
         
-        if(msgParts[1] == "start"):            
-            self.start(bot, msg,channel,user)
-            
-        if(msgParts[1] == "stop"):
-            self.stop(bot,msg,channel,user)
-            
-        if(msgParts[1] == "restart"):
-            self.restart(bot,msg,channel,user)
-            
-        if(msgParts[1] == "status"):
-            self.status(bot,msg,channel,user)
+            if(msgParts[1] == "start"):            
+                self.start(bot, msg,channel,user)
+                
+            elif(msgParts[1] == "stop"):
+                self.stop(bot,msg,channel,user)
+                
+            elif(msgParts[1] == "restart"):
+                self.restart(bot,msg,channel,user)
+                
+            elif(msgParts[1] == "status"):
+                self.status(bot,msg,channel,user)
+        else:
+            pass
 #
 # Override the functions below for your specific implementation
 #
@@ -62,12 +66,12 @@ class ScramBot(irc.IRCClient):
         """
         Sets our nick
         """
-        path = os.path.abspath('master_config.ini')
+        self.path = os.path.realpath('master_config.ini')
         settings = ConfigParser.ConfigParser()
         settings.read(path)
         
         nickname = settings.get('ScramBot', 'nickname')
-        irc.IRCClient.setNick(self, nickname)
+        irc.IRCClient.setNick(self, 'james')
 
     def connectionMade(self):
         """
@@ -97,6 +101,12 @@ class ScramBot(irc.IRCClient):
         """
         print("[I have joined %s]" %channel)
         
+    def left(self, channel):
+        """
+        Called once bot has left channel
+        """
+        print("[I have joined %s]"%channel)
+        
     def nickChanged(self, nick):
         """
         Called when my nick has been changed.
@@ -120,7 +130,9 @@ class ScramBot(irc.IRCClient):
         """
         Command was used.
         """
-        self.msg(channel, "%s:%s" %(user,m))    
+        msg = m.split(':')
+        
+        self.msg(channel, "%s:%s" %(user,msg[1]))   
         
     def alterCollidedNick(self, nickname):
         """
@@ -155,12 +167,12 @@ class ScramBotFactory(protocol.ClientFactory):
         connector.connect()
     
     def clientConnectionFailed(self, connector, reason):       
-        print "Connection Severed: " + reason
+        print "Connection Severed: " + str(reason)
 
 class BotC2:    
     def __init__(self, protocol, reactor):
-    
-        self.path = os.path.abspath('master_config.ini')
+        
+        self.path = os.path.realpath('master_config.ini')
         self.settings = ConfigParser.ConfigParser()
         self.settings.read(self.path)
         
@@ -169,7 +181,7 @@ class BotC2:
         port = int(self.settings.get('BotC2', 'port'))
         
         self.factory = ScramBotFactory(protocol, channel, reactor)
-        reactor.connectTCP(server, port, self.factory) 
+        reactor.connectSSL(server, port, self.factory, ssl.ClientContextFactory()) 
         
 if __name__ == '__main__':       
     p = ScramBotProtocol()    
