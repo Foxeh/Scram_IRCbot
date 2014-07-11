@@ -60,18 +60,18 @@ class ScramBotProtocol:
         
 class ScramBot(irc.IRCClient):  
     def __init__(self,subprotocol):
+        
         self.subprotocol =  subprotocol
+        self.path = os.path.realpath('master_config.ini')
+        self.settings = ConfigParser.ConfigParser()
+        self.settings.read(self.path)
         
     def setNick(self, nickname):
         """
         Sets our nick
         """
-        self.path = os.path.realpath('master_config.ini')
-        settings = ConfigParser.ConfigParser()
-        settings.read(path)
-        
-        nickname = settings.get('ScramBot', 'nickname')
-        irc.IRCClient.setNick(self, 'james')
+        self.nickname = self.settings.get('ScramBot', 'nickname')
+        irc.IRCClient.setNick(self, self.nickname)
 
     def connectionMade(self):
         """
