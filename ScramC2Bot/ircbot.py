@@ -126,13 +126,11 @@ class ScramBot(irc.IRCClient):
         
         self.subprotocol.handler(self, msg, channel, user)
 
-    def say(self, m, channel, user):
+    def say(self, message, channel, user):
         """
         Command was used.
         """
-        msg = m.split(':')
-        
-        self.msg(channel, "%s:%s" %(user,msg[1]))   
+        self.msg(channel, "%s:%s" %(user, message)   
         
     def alterCollidedNick(self, nickname):
         """
