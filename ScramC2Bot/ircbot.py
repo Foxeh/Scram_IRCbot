@@ -130,7 +130,7 @@ class ScramBot(irc.IRCClient):
         """
         Command was used.
         """
-        self.msg(channel, "%s:%s" %(user, message)   
+        self.msg(channel, "%s:%s" %(user, message))  
         
     def alterCollidedNick(self, nickname):
         """
